@@ -62,6 +62,9 @@ export class SSEClientTransport {
             this._abortController = new AbortController();
             this._eventSource.onerror = (event) => {
                 var _a;
+                console.error("************************************************");
+                console.log("event:", event);
+                console.log("this._authProvider:", this._authProvider);
                 if (event.code === 401 && this._authProvider) {
                     this._authThenStart().then(resolve, reject);
                     return;
