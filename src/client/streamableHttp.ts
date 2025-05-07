@@ -401,8 +401,10 @@ export class StreamableHTTPClientTransport implements Transport {
 
       if (!response.ok) {
         if (response.status === 401 && this._authProvider) {
-          // Whether this is REDIRECT or AUTHORIZED, retry sending the message.
-          await auth(this._authProvider, { serverUrl: this._url });
+          const result = await auth(this._authProvider, { serverUrl: this._url });
+          if (result !== "AUTHORIZED") {
+            throw new UnauthorizedError();
+          }
 
           // Purposely _not_ awaited, so we don't call onerror twice
           return this.send(message);
